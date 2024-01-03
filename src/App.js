@@ -6,6 +6,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Dashboard from "scenes/dashboard";
+import ProductsList from "scenes/productsList";
+import Users from "scenes/users";
+import CreateNewProduct from "scenes/createNewProduct";
+import EditProducts from "scenes/editProducts";
+import EditUsers from "scenes/editUsers";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -19,6 +24,11 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/products" element={<ProductsList />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/editUsers" element={<EditUsers />} />
+              <Route path="/editProducts" element={<EditProducts />} />
+              <Route path="/newProduct" element={<CreateNewProduct />} />
             </Route>
           </Routes>
         </ThemeProvider>
