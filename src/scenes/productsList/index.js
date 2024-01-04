@@ -53,7 +53,7 @@ const ProductsList = () => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditOutlined />}
-          onClick={() => navigate("/editProducts")}
+          onClick={() => navigate(`/editProducts/${params.id}`)}
           label="Edit"
         />,
         <GridActionsCellItem
