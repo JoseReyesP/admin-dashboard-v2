@@ -17,6 +17,7 @@ import { useTheme } from "@mui/material";
 import { EditNoteOutlined, SaveOutlined } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
 import ProductField from "components/ProductField";
+import ProductFieldEdit from "components/ProductFieldEdit";
 import Review from "components/Review";
 
 const EditProducts = () => {
@@ -78,12 +79,46 @@ const EditProducts = () => {
             component="img"
             src={productData.image}
           />
-          <ProductField field="Title:" value={productData.title} />
-          <ProductField field="Price:" value={`$${productData.price}`} />
-          <ProductField field="Category:" value={productData.category.name} />
-          <ProductField field="Stock:" value={`${productData.stock} units`} />
-          <ProductField field="Description:" value={productData.description} />
-          <ProductField field="Reviews:" value="" />
+          {!isEditing ? (
+            <>
+              <ProductField field="Title:" value={productData.title} />
+              <ProductField field="Price:" value={`$${productData.price}`} />
+              <ProductField
+                field="Category:"
+                value={productData.category.name}
+              />
+              <ProductField
+                field="Stock:"
+                value={`${productData.stock} units`}
+              />
+              <ProductField
+                field="Description:"
+                value={productData.description}
+              />
+              <ProductField field="Reviews:" value="" />{" "}
+            </>
+          ) : (
+            <>
+              <ProductFieldEdit field="Title:" value={productData.title} />
+              <ProductFieldEdit
+                field="Price:"
+                value={`$${productData.price}`}
+              />
+              <ProductFieldEdit
+                field="Category:"
+                value={productData.category.name}
+              />
+              <ProductFieldEdit
+                field="Stock:"
+                value={`${productData.stock} units`}
+              />
+              <ProductFieldEdit
+                field="Description:"
+                value={productData.description}
+              />
+              <ProductField field="Reviews:" value="" />{" "}
+            </>
+          )}
           <List dense={true}>
             {productData.reviews.map((r) => (
               <ListItem key={r._id}>
@@ -91,6 +126,7 @@ const EditProducts = () => {
                   <Rating
                     value={r.rating}
                     sx={{ margin: "0.5rem 1rem 0rem" }}
+                    readOnly
                   />
                   <ListItemText
                     sx={{ margin: "0.5rem 1rem 0rem" }}

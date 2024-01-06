@@ -13,6 +13,7 @@ import EditProducts from "scenes/editProducts";
 import EditUsers from "scenes/editUsers";
 
 function App() {
+  document.title = "Henrucci Admin";
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return (
