@@ -9,14 +9,13 @@ const ProductFieldEdit = (props) => {
         variant="h4"
         color={theme.palette.secondary[200]}
         fontWeight="bold"
-        sx={{ mb: "5px" }}
+        sx={{ mb: "5px", width: "140px" }}
       >
         {props.field}
       </Typography>
       <Input
         defaultValue={props.value}
         multiline="true"
-        fullWidth="true"
         color="secondary"
         sx={{
           "& .MuiInput-colorSecondary": {
@@ -27,6 +26,7 @@ const ProductFieldEdit = (props) => {
           backgroundColor: theme.palette.background.alt,
           color: theme.palette.secondary[200],
           fontWeight: "bold",
+          width: "100%",
         }}
       />
     </Box>
