@@ -3,6 +3,9 @@ import { Box, Typography, useTheme, Input } from "@mui/material";
 
 const ProductFieldEdit = (props) => {
   const theme = useTheme();
+  let keyValue = props.field.toLowerCase();
+  keyValue = keyValue.slice(0, -1);
+  console.log("🚀 ~ ProductFieldEdit ~ keyValue:", keyValue);
   return (
     <Box sx={{ display: "flex" }}>
       <Typography
@@ -28,6 +31,7 @@ const ProductFieldEdit = (props) => {
           fontWeight: "bold",
           width: "100%",
         }}
+        onChange={props.handleUpdatedData(keyValue)}
       />
     </Box>
   );

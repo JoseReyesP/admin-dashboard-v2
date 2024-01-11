@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetProductQuery, useGetReviewQuery } from "state/api";
+import {
+  useGetProductQuery,
+  useGetReviewQuery,
+  useUpdateProductMutation,
+} from "state/api";
 import {
   Box,
   CircularProgress,
@@ -12,6 +16,10 @@ import {
   ListItemText,
   Rating,
   Switch,
+  Divider,
+  Chip,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Header from "components/Header";
 import { useTheme } from "@mui/material";
@@ -24,36 +32,56 @@ import FlexBetween from "components/FlexBetween";
 import ProductField from "components/ProductField";
 import ProductFieldEdit from "components/ProductFieldEdit";
 import Review from "components/Review";
+import CategoryEdit from "components/categoryEdit";
 
 const EditProducts = () => {
-  const { id } = useParams();
-  // const reviewId = "";
-  const { data: productData, isLoading: isProductLoading } =
-    useGetProductQuery(id);
-  // const {
-  //   data: dataReview,
-  //   isLoading: isReviewLoading,
-  //   refetch: refetchReview,
-  // } = useGetReviewQuery(reviewId, {
-  //   skip: true,
-  // });
   const theme = useTheme();
   const [isEditing, setEditing] = useState(false);
+  const [isUpdating, setUpdating] = useState(false);
+  const [updatedData, setUpdatedData] = useState({});
+  const { id } = useParams();
+  const { data: productData, isLoading: isProductLoading } =
+    useGetProductQuery(id);
+  const [updateProduct, { isLoading }] = useUpdateProductMutation();
 
+  useEffect(() => {
+    if (productData) {
+      setUpdatedData(productData);
+    }
+    console.log("🚀 ~ useEffect ~ productData:", productData);
+  }, [productData, isProductLoading]);
+
+  useEffect(() => {
+    console.log("🚀 ~ EditProducts ~ updatedData:", updatedData);
+  }, [updatedData]);
+
+  console.log("🚀 ~ EditProducts ~ updateProduct:", updateProduct);
+  const handleUpdatedData =
+    (key) =>
+    ({ target }) => {
+      // this function will be used by components to add the new data
+      const value = target.value;
+      setUpdatedData((prevState) => ({
+        ...prevState,
+        [key]: value,
+      }));
+    };
   const handleEdit = () => {
     setEditing(true);
   };
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async ({ id: productId, updatedData }) => {
+    setUpdating(true);
+    try {
+      const result = await updateProduct(productId, updatedData);
+      console.log("🚀 ~ handleSaveChanges ~ result:", result);
+    } catch (error) {
+      console.log("🚀 ~ handleSaveChanges ~ error:", error);
+    }
+    setUpdating(false);
     setEditing(false);
   };
-  // const getProductReviews = (id) => {
-  //   refetchReview(id);
-  // };
-  // useEffect(() => {
-  //   if (!isProductLoading && productData) {
-  //     console.log(productData.reviews);
-  //   }
-  // }, [isProductLoading, productData]);
+  const handleAlertClose = (event, reason) => {};
+
   return (
     <Box m="1.5rem 2.5rem">
       {productData || !isProductLoading ? (
@@ -70,12 +98,17 @@ const EditProducts = () => {
             <Button
               sx={{ backgroundColor: theme.palette.secondary[500] }}
               onClick={isEditing ? handleSaveChanges : handleEdit}
+              disabled={isUpdating}
             >
               <Typography m="0.2rem" sx={{ color: theme.palette.primary[500] }}>
                 {isEditing ? "Save Changes" : "Edit"}
               </Typography>
               {isEditing ? (
-                <SaveOutlined sx={{ color: theme.palette.primary[500] }} />
+                isUpdating ? (
+                  <CircularProgress />
+                ) : (
+                  <SaveOutlined sx={{ color: theme.palette.primary[500] }} />
+                )
               ) : (
                 <EditNoteOutlined sx={{ color: theme.palette.primary[500] }} />
               )}
@@ -98,6 +131,7 @@ const EditProducts = () => {
                   m: "1.5rem 0rem 1.5rem 1rem",
                 }}
                 onClick={""}
+                disabled={isUpdating}
               >
                 <Typography
                   m="0.2rem"
@@ -105,9 +139,13 @@ const EditProducts = () => {
                 >
                   Upload new photo
                 </Typography>
-                <FileUploadOutlined
-                  sx={{ color: theme.palette.primary[500] }}
-                />
+                {isUpdating ? (
+                  <CircularProgress />
+                ) : (
+                  <FileUploadOutlined
+                    sx={{ color: theme.palette.primary[500] }}
+                  />
+                )}
               </Button>
             ) : null}
           </Box>
@@ -128,28 +166,58 @@ const EditProducts = () => {
                 field="Description:"
                 value={productData.description}
               />
-              <ProductField field="Reviews:" value="" />{" "}
+              <Divider
+                orientation="horizontal"
+                flexItem
+                textAlign="left"
+                sx={{ mt: "2rem", borderColor: theme.palette.background.alt }}
+              >
+                <Chip
+                  label={
+                    <ProductField field="Reviews:" variant="middle" value="" />
+                  }
+                  variant="outline"
+                  sx={{ backgroundColor: theme.palette.background.alt }}
+                />
+              </Divider>
             </>
           ) : (
             <>
-              <ProductFieldEdit field="Title:" value={productData.title} />
+              <ProductFieldEdit
+                field="Title:"
+                value={productData.title}
+                handleUpdatedData={handleUpdatedData}
+              />
               <ProductFieldEdit
                 field="Price:"
                 value={`$${productData.price}`}
+                handleUpdatedData={handleUpdatedData}
               />
-              <ProductFieldEdit
-                field="Category:"
-                value={productData.category.name}
-              />
+              <CategoryEdit handleUpdatedData={handleUpdatedData} />
               <ProductFieldEdit
                 field="Stock:"
                 value={`${productData.stock} units`}
+                handleUpdatedData={handleUpdatedData}
               />
               <ProductFieldEdit
                 field="Description:"
                 value={productData.description}
+                handleUpdatedData={handleUpdatedData}
               />
-              <ProductField field="Reviews:" value="" />{" "}
+              <Divider
+                orientation="horizontal"
+                flexItem
+                textAlign="left"
+                sx={{ mt: "2rem" }}
+              >
+                <Chip
+                  label={
+                    <ProductField field="Reviews:" variant="middle" value="" />
+                  }
+                  variant="outline"
+                  sx={{ backgroundColor: theme.palette.background.alt }}
+                />
+              </Divider>
             </>
           )}
           <List dense={true}>
@@ -182,7 +250,7 @@ const EditProducts = () => {
                     </Typography>
                   }
                 />
-                {isEditing ? <Switch /> : null}
+                {isEditing ? <Switch checked={r.isDeleted} /> : null}
               </ListItem>
             ))}
           </List>
@@ -192,6 +260,24 @@ const EditProducts = () => {
           <CircularProgress color="inherit" />
         </Box>
       )}
+      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+        <Alert
+          onClose={handleAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          The product has been updated!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+        <Alert
+          onClose={handleAlertClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Error while updating product!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
