@@ -96,21 +96,21 @@ const EditProducts = () => {
             </Typography>
 
             <Button
-              sx={{ backgroundColor: theme.palette.secondary[500] }}
+              sx={{ backgroundColor: theme.palette.secondary[300] }}
               onClick={isEditing ? handleSaveChanges : handleEdit}
               disabled={isUpdating}
             >
-              <Typography m="0.2rem" sx={{ color: theme.palette.primary[500] }}>
+              <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
                 {isEditing ? "Save Changes" : "Edit"}
               </Typography>
               {isEditing ? (
                 isUpdating ? (
                   <CircularProgress />
                 ) : (
-                  <SaveOutlined sx={{ color: theme.palette.primary[500] }} />
+                  <SaveOutlined sx={{ color: theme.palette.primary[600] }} />
                 )
               ) : (
-                <EditNoteOutlined sx={{ color: theme.palette.primary[500] }} />
+                <EditNoteOutlined sx={{ color: theme.palette.primary[600] }} />
               )}
             </Button>
           </FlexBetween>
@@ -124,7 +124,7 @@ const EditProducts = () => {
             {isEditing ? (
               <Button
                 sx={{
-                  backgroundColor: theme.palette.secondary[500],
+                  backgroundColor: theme.palette.secondary[300],
                   "&:hover": { backgroundColor: theme.palette.secondary[700] },
                   height: "auto",
                   width: "auto",
@@ -135,7 +135,7 @@ const EditProducts = () => {
               >
                 <Typography
                   m="0.2rem"
-                  sx={{ color: theme.palette.primary[500] }}
+                  sx={{ color: theme.palette.primary[600] }}
                 >
                   Upload new photo
                 </Typography>
@@ -143,7 +143,7 @@ const EditProducts = () => {
                   <CircularProgress />
                 ) : (
                   <FileUploadOutlined
-                    sx={{ color: theme.palette.primary[500] }}
+                    sx={{ color: theme.palette.primary[600] }}
                   />
                 )}
               </Button>

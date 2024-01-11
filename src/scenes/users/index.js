@@ -1,10 +1,15 @@
 import React from "react";
-import { Box, Button, useTheme, Switch } from "@mui/material";
+import { Box, Button, useTheme, Switch, Typography } from "@mui/material";
 import { useGetUsersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { DeleteForeverOutlined, EditOutlined } from "@mui/icons-material";
+import {
+  DeleteForeverOutlined,
+  EditOutlined,
+  PersonAddAlt1Outlined,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import FlexBetween from "components/FlexBetween";
 
 const Users = () => {
   const theme = useTheme();
@@ -83,7 +88,18 @@ const Users = () => {
   ];
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="USERS " subtitle="List of Users" />
+      <FlexBetween>
+        <Header title="USERS " subtitle="List of Users" />
+        <Button sx={{ backgroundColor: theme.palette.secondary[300] }}>
+          <PersonAddAlt1Outlined
+            sx={{ color: theme.palette.primary[600], m: "5px" }}
+          />
+          <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
+            Add new User
+          </Typography>
+        </Button>
+      </FlexBetween>
+
       <Box
         mt="40px"
         height="75vh"
