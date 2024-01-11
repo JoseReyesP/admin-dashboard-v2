@@ -1,10 +1,22 @@
 import React from "react";
-import { Box, Button, useTheme, Rating, Switch } from "@mui/material";
+import {
+  Box,
+  Button,
+  useTheme,
+  Rating,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { useGetProductsQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { DeleteForeverOutlined, EditOutlined } from "@mui/icons-material";
+import {
+  DeleteForeverOutlined,
+  EditOutlined,
+  AddOutlined,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import FlexBetween from "components/FlexBetween";
 
 const ProductsList = () => {
   const theme = useTheme();
@@ -44,7 +56,13 @@ const ProductsList = () => {
       field: "averageRating",
       headerName: "Rating",
       flex: 1,
-      renderCell: (params) => <Rating value={params.value} readOnly />,
+      renderCell: (params) => (
+        <Rating
+          value={params.value}
+          readOnly
+          sx={{ color: theme.palette.secondary[400] }}
+        />
+      ),
     },
     {
       field: "actions",
@@ -80,7 +98,16 @@ const ProductsList = () => {
   ];
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="PRODUCTS" subtitle="List of Products" />
+      <FlexBetween>
+        <Header title="PRODUCTS" subtitle="List of Products" />
+        <Button sx={{ backgroundColor: theme.palette.secondary[300] }}>
+          <AddOutlined sx={{ color: theme.palette.primary[600] }} />
+          <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
+            Add new Product
+          </Typography>
+        </Button>
+      </FlexBetween>
+
       <Box
         mt="40px"
         height="75vh"
