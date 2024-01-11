@@ -15,7 +15,6 @@ const Users = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetUsersQuery();
   const navigate = useNavigate();
-  console.log("🚀 ~ file: index.js:10 ~ Users ~ data:", data);
 
   const columns = [
     {

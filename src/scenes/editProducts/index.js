@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { cloneDeep } from "lodash";
 import {
   useGetProductQuery,
   useGetReviewQuery,
@@ -48,31 +49,31 @@ const EditProducts = () => {
     if (productData) {
       setUpdatedData(productData);
     }
-    console.log("🚀 ~ useEffect ~ productData:", productData);
   }, [productData, isProductLoading]);
 
-  useEffect(() => {
-    console.log("🚀 ~ EditProducts ~ updatedData:", updatedData);
-  }, [updatedData]);
-
-  console.log("🚀 ~ EditProducts ~ updateProduct:", updateProduct);
   const handleUpdatedData =
     (key) =>
     ({ target }) => {
       // this function will be used by components to add the new data
       const value = target.value;
-      setUpdatedData((prevState) => ({
-        ...prevState,
-        [key]: value,
-      }));
+      setUpdatedData((prevState) => {
+        const updatedState = { ...prevState };
+        updatedState[key] = target.value;
+        return updatedState;
+      });
     };
   const handleEdit = () => {
     setEditing(true);
   };
-  const handleSaveChanges = async ({ id: productId, updatedData }) => {
+  const handleSaveChanges = async () => {
     setUpdating(true);
     try {
-      const result = await updateProduct(productId, updatedData);
+      const newData = cloneDeep(updatedData);
+
+      const config = { id: id, updatedData: newData };
+
+      const result = await updateProduct(config);
+
       console.log("🚀 ~ handleSaveChanges ~ result:", result);
     } catch (error) {
       console.log("🚀 ~ handleSaveChanges ~ error:", error);
@@ -80,6 +81,7 @@ const EditProducts = () => {
     setUpdating(false);
     setEditing(false);
   };
+
   const handleAlertClose = (event, reason) => {};
 
   return (
@@ -169,12 +171,19 @@ const EditProducts = () => {
               <Divider
                 orientation="horizontal"
                 flexItem
-                textAlign="left"
+                textAlign="center"
                 sx={{ mt: "2rem", borderColor: theme.palette.background.alt }}
               >
                 <Chip
                   label={
-                    <ProductField field="Reviews:" variant="middle" value="" />
+                    <Typography
+                      variant="h4"
+                      color={theme.palette.secondary[200]}
+                      fontWeight="bold"
+                      sx={{ mb: "5px" }}
+                    >
+                      Reviews
+                    </Typography>
                   }
                   variant="outline"
                   sx={{ backgroundColor: theme.palette.background.alt }}
@@ -207,12 +216,19 @@ const EditProducts = () => {
               <Divider
                 orientation="horizontal"
                 flexItem
-                textAlign="left"
+                textAlign="center"
                 sx={{ mt: "2rem" }}
               >
                 <Chip
                   label={
-                    <ProductField field="Reviews:" variant="middle" value="" />
+                    <Typography
+                      variant="h4"
+                      color={theme.palette.secondary[200]}
+                      fontWeight="bold"
+                      sx={{ mb: "5px" }}
+                    >
+                      Reviews
+                    </Typography>
                   }
                   variant="outline"
                   sx={{ backgroundColor: theme.palette.background.alt }}
@@ -226,7 +242,10 @@ const EditProducts = () => {
                 <ListItemIcon>
                   <Rating
                     value={r.rating}
-                    sx={{ margin: "0.5rem 1rem 0rem" }}
+                    sx={{
+                      margin: "0.5rem 1rem 0rem",
+                      color: theme.palette.secondary[400],
+                    }}
                     readOnly
                   />
                 </ListItemIcon>

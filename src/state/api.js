@@ -26,11 +26,18 @@ export const api = createApi({
       providesTags: ["Review"],
     }),
     updateProduct: build.mutation({
-      query: ({ id, updatedData }) => ({
-        url: `/api/product/${id}`,
-        method: "PUT",
-        body: updatedData,
-      }),
+      query: (params) => {
+        const config = {
+          url: `/api/product/${params.id}`,
+          method: "PUT",
+          body: params.updatedData,
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
+          },
+        };
+        return config;
+      },
       invalidatesTags: ["Product", "Products"],
     }),
   }),
