@@ -11,6 +11,7 @@ import Users from "scenes/users";
 import CreateNewProduct from "scenes/createNewProduct";
 import EditProducts from "scenes/editProducts";
 import EditUsers from "scenes/editUsers";
+import LogIn from "scenes/login";
 
 function App() {
   document.title = "Henrucci Admin";
@@ -31,6 +32,7 @@ function App() {
               <Route path="/editProducts/:id" element={<EditProducts />} />
               <Route path="/newProduct" element={<CreateNewProduct />} />
             </Route>
+            <Route path="/login" element={<LogIn />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
