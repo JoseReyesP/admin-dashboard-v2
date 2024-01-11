@@ -25,6 +25,14 @@ export const api = createApi({
       query: (id) => `api/review/${id}`,
       providesTags: ["Review"],
     }),
+    updateProduct: build.mutation({
+      query: ({ id, updatedData }) => ({
+        url: `/api/product/${id}`,
+        method: "PUT",
+        body: updatedData,
+      }),
+      invalidatesTags: ["Product", "Products"],
+    }),
   }),
 });
 
@@ -34,4 +42,5 @@ export const {
   useGetProductsQuery,
   useGetProductQuery,
   useGetReviewQuery,
+  useUpdateProductMutation,
 } = api;

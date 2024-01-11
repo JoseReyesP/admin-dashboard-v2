@@ -60,9 +60,13 @@ const Users = () => {
           label="Delete"
         />,
         <Switch
+          checked={params.row.isDeleted}
           sx={{
-            "& .Mui-checked": {
-              color: theme.palette.primary[500],
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: theme.palette.background.alt,
+            },
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: theme.palette.background.alt,
             },
           }}
         />,

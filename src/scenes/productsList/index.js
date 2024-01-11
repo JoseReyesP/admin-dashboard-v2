@@ -33,6 +33,7 @@ const ProductsList = () => {
       field: "price",
       headerName: "Price",
       flex: 0.5,
+      renderCell: (params) => `$${params.value}`,
     },
     {
       field: "stock",
@@ -53,31 +54,29 @@ const ProductsList = () => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditOutlined />}
-          onClick={() => navigate(`/editProducts/${params.id}`)}
+          onClick={() => {
+            navigate(`/editProducts/${params.id}`);
+          }}
           label="Edit"
         />,
         <GridActionsCellItem
           icon={<DeleteForeverOutlined />}
-          onClick={() => console.log(params.id)}
+          onClick={() => console.log("estos son los params:", params)}
           label="Delete"
         />,
         <Switch
+          checked={params.row.isDeleted}
           sx={{
-            "& .Mui-checked": {
-              color: theme.palette.primary[500],
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: theme.palette.background.alt,
+            },
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: theme.palette.background.alt,
             },
           }}
         />,
       ],
     },
-    // {
-    //   field: "phoneNumber",
-    //   headerName: "Phone Number",
-    //   flex: 0.5,
-    //   renderCell: (params) => {
-    //     return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3");
-    //   },
-    // }, this field is to show that formating is possible inside datagrid, providing a layer of personalization
   ];
   return (
     <Box m="1.5rem 2.5rem">
@@ -115,7 +114,6 @@ const ProductsList = () => {
           getRowId={(row) => row._id}
           rows={data || []}
           columns={columns}
-          checkboxSelection
         />
       </Box>
     </Box>
