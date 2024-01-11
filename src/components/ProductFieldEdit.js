@@ -5,7 +5,6 @@ const ProductFieldEdit = (props) => {
   const theme = useTheme();
   let keyValue = props.field.toLowerCase();
   keyValue = keyValue.slice(0, -1);
-  console.log("🚀 ~ ProductFieldEdit ~ keyValue:", keyValue);
   return (
     <Box sx={{ display: "flex" }}>
       <Typography
