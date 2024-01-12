@@ -99,7 +99,7 @@ const ProductsList = () => {
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header title="PRODUCTS" subtitle="List of Products" />
-        <Button sx={{ backgroundColor: theme.palette.secondary[300] }}>
+        <Button sx={{ backgroundColor: theme.palette.secondary[300] }} onClick={()=>navigate("/newProduct")}>
           <AddOutlined sx={{ color: theme.palette.primary[600] }} />
           <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
             Add new Product
