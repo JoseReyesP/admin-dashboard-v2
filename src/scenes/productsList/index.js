@@ -30,15 +30,15 @@ const ProductsList = () => {
       flex: 1,
     },
     {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+    },
+    {
       field: "category",
       headerName: "Category",
       flex: 0.5,
       renderCell: (params) => params.value.name,
-    },
-    {
-      field: "title",
-      headerName: "Title",
-      flex: 1,
     },
     {
       field: "price",

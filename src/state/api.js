@@ -27,6 +27,7 @@ export const api = createApi({
     }),
     updateProduct: build.mutation({
       query: (params) => {
+        console.log("🚀 ~ params:", params);
         const config = {
           url: `/api/product/${params.id}`,
           method: "PUT",
@@ -40,6 +41,21 @@ export const api = createApi({
       },
       invalidatesTags: ["Product", "Products"],
     }),
+    updateReview: build.mutation({
+      query: (params) => {
+        const config = {
+          url: `/api/review/${params.id}`,
+          method: "PUT",
+          body: params.updatedData,
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
+          },
+        };
+        return config;
+      },
+      invalidatesTags: ["Product", "Review", "Users"],
+    }),
   }),
 });
 
@@ -50,4 +66,5 @@ export const {
   useGetProductQuery,
   useGetReviewQuery,
   useUpdateProductMutation,
+  useUpdateReviewMutation,
 } = api;

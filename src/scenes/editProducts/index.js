@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { cloneDeep } from "lodash";
 import {
   useGetProductQuery,
-  useGetReviewQuery,
   useUpdateProductMutation,
+  useUpdateReviewMutation,
 } from "state/api";
 import {
   Box,
@@ -21,6 +20,7 @@ import {
   Chip,
   Snackbar,
   Alert,
+  Slide,
 } from "@mui/material";
 import Header from "components/Header";
 import { useTheme } from "@mui/material";
@@ -32,7 +32,6 @@ import {
 import FlexBetween from "components/FlexBetween";
 import ProductField from "components/ProductField";
 import ProductFieldEdit from "components/ProductFieldEdit";
-import Review from "components/Review";
 import CategoryEdit from "components/categoryEdit";
 
 const EditProducts = () => {
@@ -40,10 +39,13 @@ const EditProducts = () => {
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
   const { id } = useParams();
   const { data: productData, isLoading: isProductLoading } =
     useGetProductQuery(id);
-  const [updateProduct, { isLoading }] = useUpdateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  const [updateReview] = useUpdateReviewMutation();
 
   useEffect(() => {
     if (productData) {
@@ -58,7 +60,7 @@ const EditProducts = () => {
       const value = target.value;
       setUpdatedData((prevState) => {
         const updatedState = { ...prevState };
-        updatedState[key] = target.value;
+        updatedState[key] = value;
         return updatedState;
       });
     };
@@ -68,21 +70,31 @@ const EditProducts = () => {
   const handleSaveChanges = async () => {
     setUpdating(true);
     try {
-      const newData = cloneDeep(updatedData);
-
-      const config = { id: id, updatedData: newData };
-
-      const result = await updateProduct(config);
-
-      console.log("🚀 ~ handleSaveChanges ~ result:", result);
+      const config = { id: id, updatedData: updatedData };
+      await updateProduct(config);
+      setSuccessAlert(true);
     } catch (error) {
-      console.log("🚀 ~ handleSaveChanges ~ error:", error);
+      setErrorAlert(true);
+      console.log(error);
     }
     setUpdating(false);
     setEditing(false);
   };
 
-  const handleAlertClose = (event, reason) => {};
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessAlert(false);
+    setErrorAlert(false);
+  };
+
+  const handleSwitchChange = (switchId) => () => {
+    const deltedStatus = updatedData.reviews.filter((r) => r._id === switchId);
+    console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
+
+    // updateReview()
+  };
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -269,7 +281,12 @@ const EditProducts = () => {
                     </Typography>
                   }
                 />
-                {isEditing ? <Switch checked={r.isDeleted} /> : null}
+                {isEditing ? (
+                  <Switch
+                    checked={r.isDeleted}
+                    onChange={handleSwitchChange(r._id)}
+                  />
+                ) : null}
               </ListItem>
             ))}
           </List>
@@ -279,7 +296,13 @@ const EditProducts = () => {
           <CircularProgress color="inherit" />
         </Box>
       )}
-      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+      <Snackbar
+        open={successAlert}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+      >
         <Alert
           onClose={handleAlertClose}
           severity="success"
@@ -288,7 +311,13 @@ const EditProducts = () => {
           The product has been updated!
         </Alert>
       </Snackbar>
-      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+      <Snackbar
+        open={errorAlert}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+      >
         <Alert
           onClose={handleAlertClose}
           severity="error"
