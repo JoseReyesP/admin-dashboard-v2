@@ -33,30 +33,43 @@ import FlexBetween from "components/FlexBetween";
 import ProductField from "components/ProductField";
 import ProductFieldEdit from "components/ProductFieldEdit";
 import CategoryEdit from "components/categoryEdit";
+import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
 const EditProducts = () => {
+  //general declarations
   const theme = useTheme();
+  const { id } = useParams();
+  //Local states
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
   const [successAlert, setSuccessAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
-  const { id } = useParams();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [currentProductImage, setCurrentProductImage] = useState("");
+  // RTK queries
   const { data: productData, isLoading: isProductLoading } =
     useGetProductQuery(id);
   const [updateProduct] = useUpdateProductMutation();
   const [updateReview] = useUpdateReviewMutation();
 
+  // useEffects
   useEffect(() => {
     if (productData) {
       setUpdatedData(productData);
+      setCurrentProductImage(productData.image);
     }
   }, [productData, isProductLoading]);
 
+  useEffect(() => {
+    selectedFile && setCurrentProductImage(URL.createObjectURL(selectedFile));
+  }, [selectedFile]);
+
+  //Handle functions
   const handleUpdatedData =
     (key) =>
     ({ target }) => {
-      // this function will be used by components to add the new data
+      // this function will be used by different components to add the new data
       const value = target.value;
       setUpdatedData((prevState) => {
         const updatedState = { ...prevState };
@@ -94,6 +107,10 @@ const EditProducts = () => {
     console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
 
     // updateReview()
+  };
+
+  const handleFileChange = ({ target }) => {
+    setSelectedFile(target.files[0]);
   };
 
   return (
@@ -150,7 +167,7 @@ const EditProducts = () => {
               m="1.5rem 0rem 1.5rem 0rem"
               sx={{ width: "200px", heigth: "200px" }}
               component="img"
-              src={productData.image}
+              src={currentProductImage}
             />
             {isEditing ? (
               <Button
@@ -161,9 +178,11 @@ const EditProducts = () => {
                   width: "auto",
                   m: "1.5rem 0rem 1.5rem 1rem",
                 }}
-                onClick={""}
                 disabled={isUpdating}
+                component="label"
+                variant="contained"
               >
+                <VisuallyHiddenInput type="file" onChange={handleFileChange} />
                 <Typography
                   m="0.2rem"
                   sx={{ color: theme.palette.primary[600] }}
