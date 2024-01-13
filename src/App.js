@@ -12,6 +12,7 @@ import CreateNewProduct from "scenes/createNewProduct";
 import EditProducts from "scenes/editProducts";
 import EditUsers from "scenes/editUsers";
 import LogIn from "scenes/login";
+import CreateNewUser from "scenes/createNewUser";
 
 function App() {
   document.title = "Henrucci Admin";
@@ -31,6 +32,7 @@ function App() {
               <Route path="/editUsers" element={<EditUsers />} />
               <Route path="/editProducts/:id" element={<EditProducts />} />
               <Route path="/newProduct" element={<CreateNewProduct />} />
+              <Route path="/newUser" element={<CreateNewUser />} />
             </Route>
             <Route path="/login" element={<LogIn />} />
           </Routes>
