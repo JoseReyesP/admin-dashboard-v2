@@ -110,7 +110,10 @@ const EditProducts = () => {
             </Typography>
 
             <Button
-              sx={{ backgroundColor: theme.palette.secondary[300] }}
+              sx={{
+                backgroundColor: theme.palette.secondary[300],
+                "&:hover": { backgroundColor: theme.palette.secondary[700] },
+              }}
               onClick={isEditing ? handleSaveChanges : handleEdit}
               disabled={isUpdating}
             >
@@ -121,10 +124,24 @@ const EditProducts = () => {
                 isUpdating ? (
                   <CircularProgress />
                 ) : (
-                  <SaveOutlined sx={{ color: theme.palette.primary[600] }} />
+                  <SaveOutlined
+                    sx={{
+                      color: theme.palette.primary[600],
+                      "&:hover": {
+                        backgroundColor: theme.palette.secondary[700],
+                      },
+                    }}
+                  />
                 )
               ) : (
-                <EditNoteOutlined sx={{ color: theme.palette.primary[600] }} />
+                <EditNoteOutlined
+                  sx={{
+                    color: theme.palette.primary[600],
+                    "&:hover": {
+                      backgroundColor: theme.palette.secondary[700],
+                    },
+                  }}
+                />
               )}
             </Button>
           </FlexBetween>
