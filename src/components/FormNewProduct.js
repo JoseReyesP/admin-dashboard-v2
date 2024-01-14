@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Divider, Grid, InputLabel, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { styled, useTheme } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useNavigate } from "react-router-dom";
+import { useGetCategoriesQuery, useCreateProductMutation } from "state/api";
 import image from "assets/default-image.jpg";
 
 const VisuallyHiddenInput = styled('input')({
@@ -26,8 +26,11 @@ const FormNewProduct = () => {
         image :"",
         stock: ''
     });
+    const {data:categories} = useGetCategoriesQuery();
+    const [createProduct] = useCreateProductMutation();
     const theme = useTheme();
-    const navigate = useNavigate();
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g";
+
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
@@ -40,6 +43,19 @@ const FormNewProduct = () => {
     
         reader.readAsDataURL(file);
       };
+
+    const handleInputChange = (event) => {
+        setNewProduct({...newProduct, [event.target.name]:event.target.value}, console.log(newProduct))
+    };
+
+    const handleSubmit = async(event) => {
+        try {
+            const response = await createProduct({newProduct: newProduct, token:token});
+            console.log('response',response);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return <form
             autoComplete="off"
@@ -59,7 +75,7 @@ const FormNewProduct = () => {
                         >
                             <img                            
                                 src={newProduct.image ? newProduct.image : image}
-                                alt="product image"
+                                alt="product"
                                 width='100%'
                                 height='65%'
                                 style={{borderRadius: 3}}
@@ -93,8 +109,8 @@ const FormNewProduct = () => {
                             fullWidth
                             helperText="Please specify the product name"
                             label="Product name"
-                            name="productName"
-                            onChange={() =>{}}
+                            name="title"
+                            onChange={handleInputChange}
                             required
                             value={newProduct.title}
                             variant="standard"
@@ -109,7 +125,8 @@ const FormNewProduct = () => {
                             fullWidth
                             label="Price"
                             name="price"
-                            onChange={() =>{}}
+                            type="number"
+                            onChange={handleInputChange}
                             required
                             value={newProduct.price}
                             variant="standard"
@@ -124,7 +141,7 @@ const FormNewProduct = () => {
                             fullWidth
                             label="Stock"
                             name="stock"
-                            onChange={()=>{}}
+                            onChange={handleInputChange}
                             required
                             type="number"
                             value={newProduct.stock}
@@ -132,34 +149,37 @@ const FormNewProduct = () => {
                             />
                         </Grid>
                         <Grid
-                            item
-                            xs={12}
-                            md={6}
+                        item
+                        xs={12}
+                        md={6}
                         >
-                            <TextField
-                            fullWidth
-                            label="Category"
+                        <FormControl variant="standard" sx={{ width: '100%'  }}>
+                            <InputLabel id="demo-simple-select-standard-label">Category*</InputLabel>
+                            <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
                             name="category"
-                            select
-                            onChange={()=>{}}
-                            required
                             value={newProduct.category}
-                            variant="standard"
-                            />
+                            onChange={handleInputChange}
+                            label="Age"
+                            >
+                            {categories?.map((category)=><MenuItem value={category._id}>{category.name}</MenuItem>)}
+                            </Select>
+                        </FormControl>
                         </Grid>
                         <Grid
                             item
                             xs={12}
-                            md={6}
+                            md={12}
                         >
                             <TextField
                             fullWidth
                             label="Description"
                             name="description"
-                            onChange={()=>{}}
+                            onChange={handleInputChange}
                             required
                             multiline
-                            rows={4}
+                            rows={3}
                             value={newProduct.description}
                             variant="standard"
                             />
@@ -168,7 +188,7 @@ const FormNewProduct = () => {
                 </CardContent>
                 <Divider />
                 <CardActions sx={{ justifyContent: 'flex-end' }}>
-                <Button variant="contained" sx={{bgcolor: theme.palette.secondary[300]}}>
+                <Button variant="contained" onClick={handleSubmit} sx={{bgcolor: theme.palette.secondary[300]}}>
                     <Typography sx={{ color: theme.palette.primary[600] }}>
                         Save product
                     </Typography>
