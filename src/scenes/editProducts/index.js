@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   useGetProductQuery,
   useUpdateProductMutation,
   useUpdateReviewMutation,
+  usePostNewPhotoMutation,
 } from "state/api";
 import {
   Box,
@@ -35,56 +37,91 @@ import ProductFieldEdit from "components/ProductFieldEdit";
 import CategoryEdit from "components/categoryEdit";
 import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
+const formDataProduct = new FormData();
+const formDataPhoto = new FormData();
+
 const EditProducts = () => {
-  //general declarations
+  //general declarations  //////////////////////////////////////////////////////
   const theme = useTheme();
   const { id } = useParams();
-  //Local states
+
+  //Local states  ///////////////////////////////////////////////////////
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
-  const [updatedData, setUpdatedData] = useState({});
   const [successAlert, setSuccessAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(undefined);
   const [currentProductImage, setCurrentProductImage] = useState("");
-  // RTK queries
+
+  // RTK queries  ///////////////////////////////////////////////////////
   const { data: productData, isLoading: isProductLoading } =
     useGetProductQuery(id);
   const [updateProduct] = useUpdateProductMutation();
   const [updateReview] = useUpdateReviewMutation();
+  const [postNewPhoto] = usePostNewPhotoMutation();
 
-  // useEffects
+  // useEffects  ///////////////////////////////////////////////////////
+  useEffect(() => {
+    if (productData && isEditing) {
+      Object.entries(productData).map(([key, value]) => {
+        formDataProduct.has(key)
+          ? formDataProduct.set(key, value)
+          : formDataProduct.append(key, value);
+      });
+      console.log("🚀 ~ Object.entries ~ formDataProduct:", formDataProduct);
+    }
+    console.log("🚀 ~ Object.entries ~ formDataProduct:", formDataProduct);
+  }, [productData, isEditing]);
+
   useEffect(() => {
     if (productData) {
-      setUpdatedData(productData);
       setCurrentProductImage(productData.image);
+      console.log("🚀 ~ useEffect ~ productData.image:", productData.image);
     }
-  }, [productData, isProductLoading]);
+  }, [productData]);
 
   useEffect(() => {
-    selectedFile && setCurrentProductImage(URL.createObjectURL(selectedFile));
+    if (selectedFile) {
+      setCurrentProductImage(URL.createObjectURL(selectedFile));
+      formDataPhoto.has("name")
+        ? formDataPhoto.set("name", selectedFile.name)
+        : formDataPhoto.append("name", selectedFile.name);
+      formDataPhoto.has("photoData")
+        ? formDataPhoto.set("photoData", selectedFile)
+        : formDataPhoto.append("photoData", selectedFile);
+    }
+    console.log("🚀 ~ useEffect ~ formDataPhoto:", formDataPhoto);
   }, [selectedFile]);
 
-  //Handle functions
+  //Handle functions  ///////////////////////////////////////////////////////
   const handleUpdatedData =
     (key) =>
     ({ target }) => {
-      // this function will be used by different components to add the new data
       const value = target.value;
-      setUpdatedData((prevState) => {
-        const updatedState = { ...prevState };
-        updatedState[key] = value;
-        return updatedState;
-      });
+      formDataProduct.has(key)
+        ? formDataProduct.set(key, value)
+        : formDataProduct.append(key, value);
+      console.log("🚀 ~ EditProducts ~ formDataProduct:", formDataProduct);
     };
   const handleEdit = () => {
-    setEditing(true);
+    // starts the editing mode
+    setEditing((prevEditing) => !prevEditing);
   };
   const handleSaveChanges = async () => {
     setUpdating(true);
+    //if there is a new photo, save the new photo first on the DB
+    if (selectedFile) {
+      const photoResponse = await postNewPhoto(formDataPhoto);
+      const photoURL = `https://pf-15a.up.railway.app/api/photos/${photoResponse.data.id}`;
+      formDataProduct.set("image", photoURL);
+      console.log("🚀 ~ handleSaveChanges ~ formDataProduct:", formDataProduct);
+      console.log(
+        "🚀 ~ handleSaveChanges ~ photoResponse.data.id:",
+        photoResponse.data.id
+      );
+    }
     try {
-      const config = { id: id, updatedData: updatedData };
-      await updateProduct(config);
+      await updateProduct(formDataProduct);
       setSuccessAlert(true);
     } catch (error) {
       setErrorAlert(true);
@@ -103,16 +140,16 @@ const EditProducts = () => {
   };
 
   const handleSwitchChange = (switchId) => () => {
-    const deltedStatus = updatedData.reviews.filter((r) => r._id === switchId);
-    console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
-
+    // const deltedStatus = updatedData.reviews.filter((r) => r._id === switchId);
+    // console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
     // updateReview()
   };
 
-  const handleFileChange = ({ target }) => {
-    setSelectedFile(target.files[0]);
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
+  // JSX component
   return (
     <Box m="1.5rem 2.5rem">
       {productData || !isProductLoading ? (

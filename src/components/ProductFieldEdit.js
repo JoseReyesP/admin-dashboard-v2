@@ -17,7 +17,7 @@ const ProductFieldEdit = (props) => {
       </Typography>
       <Input
         defaultValue={props.value}
-        multiline="true"
+        multiline={true}
         color="secondary"
         sx={{
           "& .MuiInput-colorSecondary": {
