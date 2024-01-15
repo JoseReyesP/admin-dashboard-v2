@@ -70,12 +70,11 @@ export const api = createApi({
     createProduct: build.mutation({
       query: (params) => {
         const config = {
-          url: '/api/product',
+          url: "/api/product",
           method: "POST",
           body: params.newProduct,
           headers: {
-            Authorization:
-              `Bearer ${params.token}`
+            Authorization: `Bearer ${params.token}`,
           },
         };
         return config;
@@ -85,25 +84,24 @@ export const api = createApi({
     uploadPhoto: build.mutation({
       query: (params) => {
         const config = {
-          url: '/api/photos',
-          method: "POST",
-          body: params.formDataPhoto,
-          headers: {
-          
-          },
-        }
-        return config;
-      },
-    postNewPhoto: build.mutation({
-      query: (params) => {
-        console.log("🚀 ~ params-Photo:", params);
-        const config = {
           url: "/api/photos",
           method: "POST",
-          body: params,
+          body: params.formDataPhoto,
+          headers: {},
         };
         return config;
       },
+      postNewPhoto: build.mutation({
+        query: (params) => {
+          console.log("🚀 ~ params-Photo:", params);
+          const config = {
+            url: "/api/photos",
+            method: "POST",
+            body: params,
+          };
+          return config;
+        },
+      }),
     }),
   }),
 });
