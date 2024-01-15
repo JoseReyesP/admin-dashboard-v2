@@ -23,8 +23,7 @@ const CreateNewProduct = () => {
             >
               <Grid
                 xs={10}
-                md={10}
-                lg={12}
+                md={12}
               >
               <FormNewProduct/>
               </Grid>

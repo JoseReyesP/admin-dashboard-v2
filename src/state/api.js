@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3001" }),
   reducerPath: "adminApi",
-  tagTypes: ["User", "Users", "Products", "Product", "Review"],
+  tagTypes: ["User", "Users", "Products", "Product", "Review", "Categories"],
   endpoints: (build) => ({
     getUser: build.query({
       query: (id) => `/api/users/${id}`,
@@ -24,6 +24,10 @@ export const api = createApi({
     getReview: build.query({
       query: (id) => `api/review/${id}`,
       providesTags: ["Review"],
+    }),
+    getCategories: build.query({
+      query: () => `api/category`,
+      providesTags: ["Categories"],
     }),
     updateProduct: build.mutation({
       query: (params) => {
@@ -63,6 +67,33 @@ export const api = createApi({
       },
       invalidatesTags: ["Product", "Review", "Users"],
     }),
+    createProduct: build.mutation({
+      query: (params) => {
+        const config = {
+          url: '/api/product',
+          method: "POST",
+          body: params.newProduct,
+          headers: {
+            Authorization:
+              `Bearer ${params.token}`
+          },
+        };
+        return config;
+      },
+      invalidatesTags: ["Products"],
+    }),
+    uploadPhoto: build.mutation({
+      query: (params) => {
+        const config = {
+          url: '/api/photos',
+          method: "POST",
+          body: params.formDataPhoto,
+          headers: {
+          
+          },
+        }
+        return config;
+      },
     postNewPhoto: build.mutation({
       query: (params) => {
         console.log("🚀 ~ params-Photo:", params);
@@ -83,7 +114,10 @@ export const {
   useGetProductsQuery,
   useGetProductQuery,
   useGetReviewQuery,
+  useGetCategoriesQuery,
   useUpdateProductMutation,
   useUpdateReviewMutation,
+  useCreateProductMutation,
+  useUploadPhotoMutation,
   usePostNewPhotoMutation,
 } = api;
