@@ -31,6 +31,7 @@ export const api = createApi({
     }),
     updateProduct: build.mutation({
       query: (params) => {
+        console.log("🚀 ~ params:", params);
         const config = {
           url: `/api/product/${params.id}`,
           method: "PUT",
@@ -43,6 +44,21 @@ export const api = createApi({
         return config;
       },
       invalidatesTags: ["Product", "Products"],
+    }),
+    updateReview: build.mutation({
+      query: (params) => {
+        const config = {
+          url: `/api/review/${params.id}`,
+          method: "PUT",
+          body: params.updatedData,
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
+          },
+        };
+        return config;
+      },
+      invalidatesTags: ["Product", "Review", "Users"],
     }),
     createProduct: build.mutation({
       query: (params) => {
@@ -57,7 +73,21 @@ export const api = createApi({
         };
         return config;
       },
-    })
+      invalidatesTags: ["Products"],
+    }),
+    uploadPhoto: build.mutation({
+      query: (params) => {
+        const config = {
+          url: '/api/photos',
+          method: "POST",
+          body: params.formDataPhoto,
+          headers: {
+          
+          },
+        }
+        return config;
+      },
+    }),
   }),
 });
 
@@ -69,5 +99,7 @@ export const {
   useGetReviewQuery,
   useGetCategoriesQuery,
   useUpdateProductMutation,
+  useUpdateReviewMutation,
   useCreateProductMutation,
+  useUploadPhotoMutation,
 } = api;

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { cloneDeep } from "lodash";
 import {
   useGetProductQuery,
-  useGetReviewQuery,
   useUpdateProductMutation,
+  useUpdateReviewMutation,
 } from "state/api";
 import {
   Box,
@@ -21,6 +20,7 @@ import {
   Chip,
   Snackbar,
   Alert,
+  Slide,
 } from "@mui/material";
 import Header from "components/Header";
 import { useTheme } from "@mui/material";
@@ -32,33 +32,48 @@ import {
 import FlexBetween from "components/FlexBetween";
 import ProductField from "components/ProductField";
 import ProductFieldEdit from "components/ProductFieldEdit";
-import Review from "components/Review";
 import CategoryEdit from "components/categoryEdit";
+import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
 const EditProducts = () => {
+  //general declarations
   const theme = useTheme();
+  const { id } = useParams();
+  //Local states
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
-  const { id } = useParams();
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [currentProductImage, setCurrentProductImage] = useState("");
+  // RTK queries
   const { data: productData, isLoading: isProductLoading } =
     useGetProductQuery(id);
-  const [updateProduct, { isLoading }] = useUpdateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  const [updateReview] = useUpdateReviewMutation();
 
+  // useEffects
   useEffect(() => {
     if (productData) {
       setUpdatedData(productData);
+      setCurrentProductImage(productData.image);
     }
   }, [productData, isProductLoading]);
 
+  useEffect(() => {
+    selectedFile && setCurrentProductImage(URL.createObjectURL(selectedFile));
+  }, [selectedFile]);
+
+  //Handle functions
   const handleUpdatedData =
     (key) =>
     ({ target }) => {
-      // this function will be used by components to add the new data
+      // this function will be used by different components to add the new data
       const value = target.value;
       setUpdatedData((prevState) => {
         const updatedState = { ...prevState };
-        updatedState[key] = target.value;
+        updatedState[key] = value;
         return updatedState;
       });
     };
@@ -68,21 +83,35 @@ const EditProducts = () => {
   const handleSaveChanges = async () => {
     setUpdating(true);
     try {
-      const newData = cloneDeep(updatedData);
-
-      const config = { id: id, updatedData: newData };
-
-      const result = await updateProduct(config);
-
-      console.log("🚀 ~ handleSaveChanges ~ result:", result);
+      const config = { id: id, updatedData: updatedData };
+      await updateProduct(config);
+      setSuccessAlert(true);
     } catch (error) {
-      console.log("🚀 ~ handleSaveChanges ~ error:", error);
+      setErrorAlert(true);
+      console.log(error);
     }
     setUpdating(false);
     setEditing(false);
   };
 
-  const handleAlertClose = (event, reason) => {};
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessAlert(false);
+    setErrorAlert(false);
+  };
+
+  const handleSwitchChange = (switchId) => () => {
+    const deltedStatus = updatedData.reviews.filter((r) => r._id === switchId);
+    console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
+
+    // updateReview()
+  };
+
+  const handleFileChange = ({ target }) => {
+    setSelectedFile(target.files[0]);
+  };
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -98,7 +127,10 @@ const EditProducts = () => {
             </Typography>
 
             <Button
-              sx={{ backgroundColor: theme.palette.secondary[300] }}
+              sx={{
+                backgroundColor: theme.palette.secondary[300],
+                "&:hover": { backgroundColor: theme.palette.secondary[700] },
+              }}
               onClick={isEditing ? handleSaveChanges : handleEdit}
               disabled={isUpdating}
             >
@@ -109,10 +141,24 @@ const EditProducts = () => {
                 isUpdating ? (
                   <CircularProgress />
                 ) : (
-                  <SaveOutlined sx={{ color: theme.palette.primary[600] }} />
+                  <SaveOutlined
+                    sx={{
+                      color: theme.palette.primary[600],
+                      "&:hover": {
+                        backgroundColor: theme.palette.secondary[700],
+                      },
+                    }}
+                  />
                 )
               ) : (
-                <EditNoteOutlined sx={{ color: theme.palette.primary[600] }} />
+                <EditNoteOutlined
+                  sx={{
+                    color: theme.palette.primary[600],
+                    "&:hover": {
+                      backgroundColor: theme.palette.secondary[700],
+                    },
+                  }}
+                />
               )}
             </Button>
           </FlexBetween>
@@ -121,7 +167,7 @@ const EditProducts = () => {
               m="1.5rem 0rem 1.5rem 0rem"
               sx={{ width: "200px", heigth: "200px" }}
               component="img"
-              src={productData.image}
+              src={currentProductImage}
             />
             {isEditing ? (
               <Button
@@ -132,9 +178,11 @@ const EditProducts = () => {
                   width: "auto",
                   m: "1.5rem 0rem 1.5rem 1rem",
                 }}
-                onClick={""}
                 disabled={isUpdating}
+                component="label"
+                variant="contained"
               >
+                <VisuallyHiddenInput type="file" onChange={handleFileChange} />
                 <Typography
                   m="0.2rem"
                   sx={{ color: theme.palette.primary[600] }}
@@ -269,7 +317,12 @@ const EditProducts = () => {
                     </Typography>
                   }
                 />
-                {isEditing ? <Switch checked={r.isDeleted} /> : null}
+                {isEditing ? (
+                  <Switch
+                    checked={r.isDeleted}
+                    onChange={handleSwitchChange(r._id)}
+                  />
+                ) : null}
               </ListItem>
             ))}
           </List>
@@ -279,7 +332,13 @@ const EditProducts = () => {
           <CircularProgress color="inherit" />
         </Box>
       )}
-      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+      <Snackbar
+        open={successAlert}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+      >
         <Alert
           onClose={handleAlertClose}
           severity="success"
@@ -288,7 +347,13 @@ const EditProducts = () => {
           The product has been updated!
         </Alert>
       </Snackbar>
-      <Snackbar open={false} autoHideDuration={5000} onClose={handleAlertClose}>
+      <Snackbar
+        open={errorAlert}
+        autoHideDuration={3000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        TransitionComponent={(props) => <Slide {...props} direction="down" />}
+      >
         <Alert
           onClose={handleAlertClose}
           severity="error"
