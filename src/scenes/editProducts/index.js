@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
   useGetProductQuery,
   useUpdateProductMutation,
@@ -37,11 +36,12 @@ import ProductFieldEdit from "components/ProductFieldEdit";
 import CategoryEdit from "components/categoryEdit";
 import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
+//Global declarations //////////////////////////////////////////////////
 const formDataProduct = new FormData();
 const formDataPhoto = new FormData();
 
 const EditProducts = () => {
-  //general declarations  //////////////////////////////////////////////////////
+  //general declarations  ///////////////////////////////////////////////
   const theme = useTheme();
   const { id } = useParams();
 
