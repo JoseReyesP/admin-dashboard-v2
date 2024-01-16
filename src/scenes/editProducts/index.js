@@ -41,11 +41,11 @@ const formDataProduct = new FormData();
 const formDataPhoto = new FormData();
 
 const EditProducts = () => {
-  //general declarations  ///////////////////////////////////////////////
+  // general declarations  ///////////////////////////////////////////////
   const theme = useTheme();
   const { id } = useParams();
 
-  //Local states  ///////////////////////////////////////////////////////
+  // Local states  ///////////////////////////////////////////////////////
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
@@ -93,7 +93,7 @@ const EditProducts = () => {
     console.log("🚀 ~ useEffect ~ formDataPhoto:", formDataPhoto);
   }, [selectedFile]);
 
-  //Handle functions  ///////////////////////////////////////////////////////
+  // Handle functions  //////////////////////////////////////////////////////
   const handleUpdatedData =
     (key) =>
     ({ target }) => {
@@ -140,9 +140,16 @@ const EditProducts = () => {
   };
 
   const handleSwitchChange = (switchId) => () => {
-    // const deltedStatus = updatedData.reviews.filter((r) => r._id === switchId);
-    // console.log("🚀 ~ handleSwitchChange ~ deltedStatus:", deltedStatus);
-    // updateReview()
+    const review = productData.reviews.filter((r) => r._id === switchId);
+    console.log(
+      "🚀 ~ handleSwitchChange ~ deltedStatus:",
+      switchId,
+      review[0].isDeleted,
+      typeof review[0].isDeleted
+    );
+    const isDeleted = review[0].isDeleted;
+    const params = { id: switchId, isDeleted: !isDeleted };
+    updateReview(params);
   };
 
   const handleFileChange = (event) => {
@@ -354,12 +361,10 @@ const EditProducts = () => {
                     </Typography>
                   }
                 />
-                {isEditing ? (
-                  <Switch
-                    checked={r.isDeleted}
-                    onChange={handleSwitchChange(r._id)}
-                  />
-                ) : null}
+                <Switch
+                  checked={r.isDeleted}
+                  onChange={handleSwitchChange(r._id)}
+                />
               </ListItem>
             ))}
           </List>

@@ -57,7 +57,7 @@ export const api = createApi({
         const config = {
           url: `/api/review/${params.id}`,
           method: "PUT",
-          body: params.updatedData,
+          body: { isDeleted: params.isDeleted },
           headers: {
             Authorization:
               "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
@@ -65,7 +65,7 @@ export const api = createApi({
         };
         return config;
       },
-      invalidatesTags: ["Product", "Review", "Users"],
+      invalidatesTags: ["Product", "Review", "Users", "User"],
     }),
     createProduct: build.mutation({
       query: (params) => {
@@ -91,17 +91,17 @@ export const api = createApi({
         };
         return config;
       },
-      postNewPhoto: build.mutation({
-        query: (params) => {
-          console.log("🚀 ~ params-Photo:", params);
-          const config = {
-            url: "/api/photos",
-            method: "POST",
-            body: params,
-          };
-          return config;
-        },
-      }),
+    }),
+    postNewPhoto: build.mutation({
+      query: (params) => {
+        console.log("🚀 ~ params-Photo:", params);
+        const config = {
+          url: "/api/photos",
+          method: "POST",
+          body: params,
+        };
+        return config;
+      },
     }),
   }),
 });
