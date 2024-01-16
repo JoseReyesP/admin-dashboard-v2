@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Card, CardActions, CardContent, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Slide, Snackbar, TextField, Typography } from "@mui/material";
+import {
+    Alert,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Divider,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    Slide,
+    Snackbar,
+    TextField,
+    Typography
+} from "@mui/material";
 import { styled, useTheme } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useGetCategoriesQuery, useCreateProductMutation, useUploadPhotoMutation } from "state/api";
@@ -60,7 +76,6 @@ const FormNewProduct = () => {
         //console.log("photo uploaded, id: ", photoResponse.data);
         //console.log("image:", `https://pf-15a.up.railway.app/api/photos/${photoResponse.data.id}`);
         setNewProduct({...newProduct, image: `https://pf-15a.up.railway.app/api/photos/${photoResponse.data.id}`});
-        delete errors.submit;
       };
 
     const handleInputChange = (event) => {
@@ -86,7 +101,8 @@ const FormNewProduct = () => {
         try {
             if(errors.submit) return setErrorAlert(true);
             if(Object.keys(errors).length > 0){
-                return setErrors({...errors, submit: "Please complete all required inputs"});
+                setErrors({...errors, submit: "Please complete all required inputs"});
+                return setErrorAlert(true);
             }
             const response = await createProduct({newProduct: newProduct, token:token});
             //console.log('response',response);
