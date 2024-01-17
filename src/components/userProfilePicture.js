@@ -1,0 +1,50 @@
+import React from "react";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Rating,
+  Switch,
+  Divider,
+  Chip,
+  Snackbar,
+  Alert,
+  Slide,
+} from "@mui/material";
+import { useTheme } from "@mui/material";
+import profileImage from "assets/profileImage.png";
+
+const UserProfilePicture = (props) => {
+  const theme = useTheme();
+  return (
+    <Box display="flex" flexDirection="column" alignItems="center" mr="1.5rem">
+      <Box
+        m="1.5rem"
+        sx={{ width: "100px", height: "100px" }}
+        component="img"
+        src={profileImage}
+      />
+      {props.isEditing ? (
+        <Button
+          sx={{
+            backgroundColor: theme.palette.secondary[300],
+            "&:hover": {
+              backgroundColor: theme.palette.secondary[700],
+            },
+          }}
+        >
+          <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
+            Upload photo
+          </Typography>
+        </Button>
+      ) : null}
+    </Box>
+  );
+};
+
+export default UserProfilePicture;
