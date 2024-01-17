@@ -9,13 +9,14 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material";
 
-const CategoryEdit = () => {
+const CategoryEdit = (props) => {
   const theme = useTheme();
   const [category, setCategory] = useState(1);
-  const handleChange = ({ target }) => {
-    setCategory(target.value);
-    console.log("🚀 ~ handleChange ~ target:", target.value);
+  const handleUpdate = (event) => {
+    props.handleUpdatedData("category")(event);
+    setCategory(event.target.value);
   };
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Typography
@@ -31,12 +32,12 @@ const CategoryEdit = () => {
           labelId="demo-simple-select-standard-label"
           id="demo-simple-select-standard"
           value={category}
-          onChange={handleChange}
+          onChange={handleUpdate}
         >
           <MenuItem value={1}>
             <em>None</em>
           </MenuItem>
-          <MenuItem value={10}>
+          <MenuItem value={"657122b7fe7c6097f5167de9"}>
             <Typography
               sx={{
                 ml: "1rem",
@@ -47,7 +48,7 @@ const CategoryEdit = () => {
               Ropa Hombre
             </Typography>
           </MenuItem>
-          <MenuItem value={20}>
+          <MenuItem value={"657122bcfe7c6097f5167ded"}>
             <Typography
               sx={{
                 ml: "1rem",
@@ -58,7 +59,7 @@ const CategoryEdit = () => {
               Ropa Mujer
             </Typography>
           </MenuItem>
-          <MenuItem value={30}>
+          <MenuItem value={"657122c5fe7c6097f5167df1"}>
             <Typography
               sx={{
                 ml: "1rem",

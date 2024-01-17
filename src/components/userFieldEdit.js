@@ -1,19 +1,18 @@
 import React from "react";
 import { Box, Typography, useTheme, Input } from "@mui/material";
 
-const ProductFieldEdit = (props) => {
+const UserFieldEdit = (props) => {
   const theme = useTheme();
   let keyValue = props.field.toLowerCase();
-  keyValue = keyValue.slice(0, -1);
   return (
     <Box sx={{ display: "flex" }}>
       <Typography
         variant="h4"
         color={theme.palette.secondary[200]}
         fontWeight="bold"
-        sx={{ mb: "5px", width: "140px" }}
+        sx={{ mb: "5px", width: "160px", mr: "2rem" }}
       >
-        {props.field}
+        {props.field}:
       </Typography>
       <Input
         defaultValue={props.value}
@@ -23,8 +22,7 @@ const ProductFieldEdit = (props) => {
           "& .MuiInput-colorSecondary": {
             borderBottom: `1px solid ${theme.palette.secondary[600]}`,
           },
-          ml: "0.5rem",
-          pl: "1rem",
+          pl: "0.5rem",
           backgroundColor: theme.palette.background.alt,
           color: theme.palette.secondary[200],
           fontWeight: "bold",
@@ -36,4 +34,4 @@ const ProductFieldEdit = (props) => {
   );
 };
 
-export default ProductFieldEdit;
+export default UserFieldEdit;

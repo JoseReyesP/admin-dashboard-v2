@@ -16,7 +16,7 @@ const ProductField = (props) => {
       <Typography
         variant="h4"
         color={theme.palette.secondary[100]}
-        sx={{ mb: "5px", ml: "1rem" }}
+        sx={{ mb: "5px", ml: "0.5rem" }}
       >
         {props.value}
       </Typography>

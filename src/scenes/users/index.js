@@ -55,7 +55,7 @@ const Users = () => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditOutlined />}
-          onClick={() => navigate("/editUsers")}
+          onClick={() => navigate(`/editUsers/${params.id}`)}
           label="Edit"
         />,
         <GridActionsCellItem
@@ -89,7 +89,10 @@ const Users = () => {
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header title="USERS " subtitle="List of Users" />
-        <Button sx={{ backgroundColor: theme.palette.secondary[300] }} onClick={()=>navigate('/newUser')}>
+        <Button
+          sx={{ backgroundColor: theme.palette.secondary[300] }}
+          onClick={() => navigate("/newUser")}
+        >
           <PersonAddAlt1Outlined
             sx={{ color: theme.palette.primary[600], m: "5px" }}
           />
