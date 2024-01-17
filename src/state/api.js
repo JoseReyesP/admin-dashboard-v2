@@ -105,7 +105,7 @@ export const api = createApi({
       },
     }),
     postNewUser: build.mutation({
-      query: (params) =>{
+      query: (params) => {
         const config = {
           url: "/api/users",
           method: "POST",
@@ -115,7 +115,31 @@ export const api = createApi({
           },
         };
         return config;
-      }
+      },
+    }),
+    updateUser: build.mutation({
+      query: (params) => {
+        console.log("🚀 ~ params-User:", params);
+        const body = {
+          name: params.get("name"),
+          lastname: params.get("lastname"),
+          role: params.get("role"),
+          email: params.get("email"),
+          address: params.get("address"),
+          image: params.get("image"),
+        };
+        const config = {
+          url: `/api/users/${params.get("_id")}`,
+          method: "PUT",
+          body: body,
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
+          },
+        };
+        return config;
+      },
+      invalidatesTags: ["User", "Users"],
     }),
   }),
 });
@@ -133,4 +157,5 @@ export const {
   useUploadPhotoMutation,
   usePostNewPhotoMutation,
   usePostNewUserMutation,
+  useUpdateUserMutation,
 } = api;
