@@ -104,6 +104,19 @@ export const api = createApi({
         return config;
       },
     }),
+    postNewUser: build.mutation({
+      query: (params) =>{
+        const config = {
+          url: "/api/users",
+          method: "POST",
+          body: params.newUser,
+          headers: {
+            Authorization: `Bearer ${params.token}`,
+          },
+        };
+        return config;
+      }
+    }),
   }),
 });
 
@@ -119,4 +132,5 @@ export const {
   useCreateProductMutation,
   useUploadPhotoMutation,
   usePostNewPhotoMutation,
+  usePostNewUserMutation,
 } = api;
