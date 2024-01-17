@@ -1,23 +1,7 @@
 import React from "react";
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Rating,
-  Switch,
-  Divider,
-  Chip,
-  Snackbar,
-  Alert,
-  Slide,
-} from "@mui/material";
+import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material";
-import profileImage from "assets/profileImage.png";
+import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
 const UserProfilePicture = (props) => {
   const theme = useTheme();
@@ -27,7 +11,7 @@ const UserProfilePicture = (props) => {
         m="1.5rem"
         sx={{ width: "100px", height: "100px" }}
         component="img"
-        src={profileImage}
+        src={props.currentProfileImage}
       />
       {props.isEditing ? (
         <Button
@@ -37,7 +21,10 @@ const UserProfilePicture = (props) => {
               backgroundColor: theme.palette.secondary[700],
             },
           }}
+          component="label"
+          variant="contained"
         >
+          <VisuallyHiddenInput type="file" onChange={props.handleFileChange} />
           <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
             Upload photo
           </Typography>

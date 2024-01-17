@@ -37,6 +37,15 @@ const UserInfoDisplay = (props) => {
       <Typography variant="h6" color={theme.palette.secondary[100]}>
         {`Address: ${props.address}`}
       </Typography>
+      <Typography variant="h6" color={theme.palette.secondary[100]}>
+        {`Created: ${props.created}`}
+      </Typography>
+      <Typography variant="h6" color={theme.palette.secondary[100]}>
+        {`Updated: ${props.updated}`}
+      </Typography>
+      <Typography variant="h6" color={theme.palette.secondary[100]}>
+        {`Enabled: ${props.enabled}`}
+      </Typography>
     </Box>
   );
 };

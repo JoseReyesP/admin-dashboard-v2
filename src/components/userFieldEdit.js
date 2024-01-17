@@ -12,7 +12,7 @@ const UserFieldEdit = (props) => {
         fontWeight="bold"
         sx={{ mb: "5px", width: "160px", mr: "2rem" }}
       >
-        {props.field}
+        {props.field}:
       </Typography>
       <Input
         defaultValue={props.value}
@@ -28,6 +28,7 @@ const UserFieldEdit = (props) => {
           fontWeight: "bold",
           width: "100%",
         }}
+        onChange={props.handleUpdatedData(keyValue)}
       />
     </Box>
   );

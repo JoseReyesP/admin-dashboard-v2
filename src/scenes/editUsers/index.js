@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Form, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material";
-import { useGetUserQuery } from "state/api";
+import {
+  useGetUserQuery,
+  usePostNewPhotoMutation,
+  useUpdateUserMutation,
+} from "state/api";
 import {
   Box,
   CircularProgress,
@@ -23,12 +27,16 @@ import {
   EditNoteOutlined,
   SaveOutlined,
   FileUploadOutlined,
+  SecurityUpdate,
 } from "@mui/icons-material";
 import Header from "components/Header";
 import FlexBetween from "components/FlexBetween";
 import UserProfilePicture from "components/userProfilePicture";
 import UserFieldEdit from "components/userFieldEdit";
 import UserInfoDisplay from "components/userInfoDisplay";
+
+const formDataUser = new FormData();
+const formDataPhoto = new FormData();
 
 const EditUsers = () => {
   // General declarations //////////////////////
@@ -45,17 +53,71 @@ const EditUsers = () => {
 
   // RTK queries  ///////////////////////////////////////////////////////
   const { data: userData, isLoading: isUserDataLoading } = useGetUserQuery(id);
+  const [postNewPhoto] = usePostNewPhotoMutation();
+  const [updateUser] = useUpdateUserMutation();
 
   // useEffects  ///////////////////////////////////////////////////////
   useEffect(() => {
-    userData && console.log("🚀 ~ useEffect ~ userData:", userData);
-  }, [userData]);
+    if (userData) {
+      Object.entries(userData).map(([key, value]) => {
+        formDataUser.has(key)
+          ? formDataUser.set(key, value)
+          : formDataUser.append(key, value);
+      });
+    }
+    console.log("🚀 ~ formDataUser:", formDataUser);
+  }, [userData, isUserDataLoading]);
+
+  useEffect(() => {
+    if (selectedFile) {
+      setCurrentProfileImage(URL.createObjectURL(selectedFile));
+      formDataPhoto.has("name")
+        ? formDataPhoto.set("name", selectedFile.name)
+        : formDataPhoto.append("name", selectedFile.name);
+      formDataPhoto.has("photoData")
+        ? formDataPhoto.set("photoData", selectedFile)
+        : formDataPhoto.append("photoData", selectedFile);
+    }
+    console.log("🚀 ~ useEffect ~ formDataPhoto:", formDataPhoto);
+  }, [selectedFile]);
+
   // Handle functions  //////////////////////////////////////////////////////
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
+    setUpdating(true);
+    if (selectedFile) {
+      const photoResponse = await postNewPhoto(formDataPhoto);
+      const photoURL = `https://pf-15a.up.railway.app/api/photos/${photoResponse.data.id}`;
+      formDataUser.set("image", photoURL);
+      console.log("🚀 ~ handleSaveChanges ~ photoURL:", photoURL);
+      console.log("🚀 ~ handleSaveChanges ~ formDataUser:", formDataUser);
+    }
+    try {
+      await updateUser(formDataUser);
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdating(false);
     setEditing(false);
   };
   const handleEdit = () => {
     setEditing(true);
+  };
+  const handleUpdatedData =
+    (key) =>
+    ({ target }) => {
+      const value = target.value;
+      console.log("🚀 ~ handleUpdatedData ~ value:", value);
+      console.log("🚀 ~ handleUpdatedData ~ key:", key);
+      if (formDataUser.has(key)) {
+        formDataUser.set(key, value);
+      } else {
+        formDataUser.append(key, value);
+      }
+      console.log("🚀 ~ EditProducts ~ formDataProduct:", formDataUser);
+    };
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   return (
@@ -65,7 +127,11 @@ const EditUsers = () => {
           <FlexBetween>
             <Box sx={{ display: "flex", alignItems: "flex-start" }}>
               {/* Profile Image */}
-              <UserProfilePicture isEditing={isEditing} />
+              <UserProfilePicture
+                isEditing={isEditing}
+                handleFileChange={handleFileChange}
+                currentProfileImage={currentProfileImage}
+              />
               {/* User General Info */}
               {!isEditing ? (
                 <UserInfoDisplay
@@ -75,17 +141,37 @@ const EditUsers = () => {
                   role={userData.role}
                   email={userData.email}
                   address={userData.address}
+                  created={userData.created}
+                  updated={userData.updated}
+                  enabled={userData.isDeleted}
                 />
               ) : (
                 <Box>
-                  <UserFieldEdit field={"Name:"} value={userData.name} />
                   <UserFieldEdit
-                    field={"Lastname:"}
-                    value={userData.lastname}
+                    field={"Name"}
+                    value={userData.name}
+                    handleUpdatedData={handleUpdatedData}
                   />
-                  <UserFieldEdit field={"Role:"} value={userData.role} />
-                  <UserFieldEdit field={"Email:"} value={userData.email} />
-                  <UserFieldEdit field={"Address:"} value={userData.address} />
+                  <UserFieldEdit
+                    field={"Lastname"}
+                    value={userData.lastname}
+                    handleUpdatedData={handleUpdatedData}
+                  />
+                  <UserFieldEdit
+                    field={"Role"}
+                    value={userData.role}
+                    handleUpdatedData={handleUpdatedData}
+                  />
+                  <UserFieldEdit
+                    field={"Email"}
+                    value={userData.email}
+                    handleUpdatedData={handleUpdatedData}
+                  />
+                  <UserFieldEdit
+                    field={"Address"}
+                    value={userData.address}
+                    handleUpdatedData={handleUpdatedData}
+                  />
                 </Box>
               )}
             </Box>
