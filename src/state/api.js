@@ -36,6 +36,7 @@ export const api = createApi({
           title: params.get("title"),
           price: params.get("price"),
           stock: params.get("stock"),
+          category: params.get("category"),
           description: params.get("description"),
           image: params.get("image"),
         };
@@ -57,7 +58,7 @@ export const api = createApi({
         const config = {
           url: `/api/review/${params.id}`,
           method: "PUT",
-          body: params.updatedData,
+          body: { isDeleted: params.isDeleted },
           headers: {
             Authorization:
               "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxNGM2NTVlMTRiMzE0ODRhMWNhOGUiLCJpYXQiOjE3MDUwMDUzNjd9.gR7JcF7BYRl4bpqC4j3ATV0lP1-xrTb_7LZKqatxv5g",
@@ -65,7 +66,7 @@ export const api = createApi({
         };
         return config;
       },
-      invalidatesTags: ["Product", "Review", "Users"],
+      invalidatesTags: ["Product", "Review", "Users", "User"],
     }),
     createProduct: build.mutation({
       query: (params) => {
