@@ -36,6 +36,7 @@ export const api = createApi({
           title: params.get("title"),
           price: params.get("price"),
           stock: params.get("stock"),
+          category: params.get("category"),
           description: params.get("description"),
           image: params.get("image"),
         };

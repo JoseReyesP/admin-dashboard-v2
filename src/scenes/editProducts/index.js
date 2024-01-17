@@ -98,9 +98,13 @@ const EditProducts = () => {
     (key) =>
     ({ target }) => {
       const value = target.value;
-      formDataProduct.has(key)
-        ? formDataProduct.set(key, value)
-        : formDataProduct.append(key, value);
+      console.log("🚀 ~ handleUpdatedData ~ value:", value);
+      console.log("🚀 ~ handleUpdatedData ~ key:", key);
+      if (formDataProduct.has(key)) {
+        formDataProduct.set(key, value);
+      } else {
+        formDataProduct.append(key, value);
+      }
       console.log("🚀 ~ EditProducts ~ formDataProduct:", formDataProduct);
     };
   const handleEdit = () => {
@@ -247,15 +251,12 @@ const EditProducts = () => {
           {!isEditing ? (
             <>
               <ProductField field="Title:" value={productData.title} />
-              <ProductField field="Price:" value={`$${productData.price}`} />
+              <ProductField field="Price: $" value={`${productData.price}`} />
               <ProductField
                 field="Category:"
                 value={productData.category.name}
               />
-              <ProductField
-                field="Stock:"
-                value={`${productData.stock} units`}
-              />
+              <ProductField field="Stock:" value={`${productData.stock}`} />
               <ProductField
                 field="Description:"
                 value={productData.description}
@@ -291,13 +292,13 @@ const EditProducts = () => {
               />
               <ProductFieldEdit
                 field="Price:"
-                value={`$${productData.price}`}
+                value={`${productData.price}`}
                 handleUpdatedData={handleUpdatedData}
               />
               <CategoryEdit handleUpdatedData={handleUpdatedData} />
               <ProductFieldEdit
                 field="Stock:"
-                value={`${productData.stock} units`}
+                value={`${productData.stock}`}
                 handleUpdatedData={handleUpdatedData}
               />
               <ProductFieldEdit

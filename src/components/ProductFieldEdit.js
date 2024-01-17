@@ -23,7 +23,7 @@ const ProductFieldEdit = (props) => {
           "& .MuiInput-colorSecondary": {
             borderBottom: `1px solid ${theme.palette.secondary[600]}`,
           },
-          ml: "1.5rem",
+          ml: "0.5rem",
           pl: "1rem",
           backgroundColor: theme.palette.background.alt,
           color: theme.palette.secondary[200],
