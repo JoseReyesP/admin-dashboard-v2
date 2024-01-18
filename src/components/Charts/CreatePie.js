@@ -4,21 +4,42 @@ import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom',
+      labels: {
+        color: '#141414',
+      },
+    },
+    title: {
+      display: true,
+      text: 'Product Categories',
+      color: 'white',
+      font: {
+        size: 16,
+        weight: 'normal',
+      },
+    },
+  },
+};
+
 export const data = {
   labels: ['Ropa de mujer', 'Ropa de hombre', 'Joyería'],
   datasets: [
     {
       label: '# of Items',
-      data: [12, 19, 3],
+      data: [26, 37, 10],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
+        'rgba(241, 59, 78, 0.8)',
+        'rgba(59, 103, 241, 0.8)',
+        'rgb(255, 209, 102, 0.8)',
       ],
       borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
+        'rgba(241, 59, 78, 1)',
+        'rgba(59, 103, 241, 1)',
+        'rgb(255, 209, 102, 1)',
       ],
       borderWidth: 1,
     },
@@ -26,5 +47,5 @@ export const data = {
 };
 
 export function CreatePie() {
-  return <Pie data={data} style={{width:'80%'}} />;
+  return <Pie options={options} data={data} style={{width:'80%', paddingBottom: 5}} />;
 }

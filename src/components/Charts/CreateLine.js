@@ -27,12 +27,33 @@ export const options = {
   plugins: {
     legend: {
       position: 'top',
+      labels: {
+        usePointStyle: true,
+        color: '#141414',
+      },
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'Monthly sales by category',
+      color: 'white',
+      font: {
+        size: 16,
+        weight: 'normal',
+      },
     },
   },
+  scales: {
+    x: {
+      ticks: {
+        color: '#141414',
+      }
+    },
+    y: {
+      ticks: {
+        color: '#3d3d3d',
+      }
+    }
+  }
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -43,20 +64,20 @@ export const data = {
     {
       label: 'Ropa de mujer',
       data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      borderColor: 'rgb(241, 59, 78)',
+      backgroundColor: 'rgba(241, 59, 78, 0.5)',
     },
     {
       label: 'Ropa de hombre',
       data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      borderColor: 'rgb(59, 103, 241)',
+      backgroundColor: 'rgba(59, 103, 241, 0.5)',
     },
     {
         label: 'Joyeria',
         data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-        borderColor: 'rgb(37, 190, 91)',
-        backgroundColor: 'rgba(75, 185, 113, 0.5)',
+        borderColor: 'rgb(255, 209, 102)',
+        backgroundColor: 'rgba(255, 209, 102, 0.5)',
       },
   ],
 };

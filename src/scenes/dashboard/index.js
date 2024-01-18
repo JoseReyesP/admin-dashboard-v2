@@ -17,9 +17,9 @@ const Dashboard = () => {
       <Box sx={{display:'flex', justifyContent:'space-between',width:'97%', m:2}}>
         <Box sx={{display:'flex', width:'30%'}}>
           <div style={{backgroundColor: theme.palette.primary.main, borderRadius:3, padding: 10, width:'22vw', display:'flex',flexDirection:'row', justifyContent:'space-evenly', paddingTop: 25}}>
-            <div>
-            <p>Earnings</p>
-            <p>$63,448.78</p>
+            <div style={{display: 'flex', flexDirection:'column', justifyContent:'space-evenly'}}>
+            <Typography variant="h3">Earnings</Typography>
+            <Typography variant="h2">$63,448.78</Typography>
             </div>
             <div style={{alignItems: 'flex-start', display:'flex'}}>
             <Avatar>
