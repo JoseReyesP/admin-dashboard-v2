@@ -34,6 +34,7 @@ import FlexBetween from "components/FlexBetween";
 import UserProfilePicture from "components/userProfilePicture";
 import UserFieldEdit from "components/userFieldEdit";
 import UserInfoDisplay from "components/userInfoDisplay";
+import defaultprofile from "assets/profileImage.png"
 
 const formDataUser = new FormData();
 const formDataPhoto = new FormData();
@@ -64,6 +65,9 @@ const EditUsers = () => {
           ? formDataUser.set(key, value)
           : formDataUser.append(key, value);
       });
+      //console.log('user image',userData.image);
+      if (userData.image == 'no profile picture') setCurrentProfileImage(defaultprofile);
+      else setCurrentProfileImage(userData.image);
     }
     console.log("🚀 ~ formDataUser:", formDataUser);
   }, [userData, isUserDataLoading]);
