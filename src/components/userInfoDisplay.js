@@ -44,7 +44,7 @@ const UserInfoDisplay = (props) => {
         {`Updated: ${props.updated}`}
       </Typography>
       <Typography variant="h6" color={theme.palette.secondary[100]}>
-        {`Enabled: ${props.enabled}`}
+        {`Enabled: ${!props.enabled}`}
       </Typography>
     </Box>
   );

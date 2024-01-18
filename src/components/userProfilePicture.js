@@ -5,6 +5,7 @@ import VisuallyHiddenInput from "components/visuallyHiddenInput";
 
 const UserProfilePicture = (props) => {
   const theme = useTheme();
+  console.log("current image in UserProfilePicture", props.currentProfileImage);
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mr="1.5rem">
       <Box
