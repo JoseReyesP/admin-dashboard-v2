@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { Card,CardContent, Grid, Box, Stack, Avatar, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import { CreateBar } from "components/Charts/CreateBar";
 import { CreateLine } from "components/Charts/CreateLine";
 import { CreateDoughnut } from "components/Charts/CreateDoughnut";
@@ -22,8 +22,8 @@ const Dashboard = () => {
             <Typography variant="h2">$63,448.78</Typography>
             </div>
             <div style={{alignItems: 'flex-start', display:'flex'}}>
-            <Avatar>
-              <MonetizationOnIcon/>
+            <Avatar style={{background: '#1e4db7'}}>
+              <AttachMoneyOutlinedIcon color="action" fontSize="large"/>
             </Avatar>
             </div>
           </div>
@@ -34,7 +34,7 @@ const Dashboard = () => {
             key={item.title}
             style={{backgroundColor: theme.palette.primary.main, borderRadius:3, padding:10, display:"flex", flexDirection:'column', width:'13vw'}}
             >
-                <Avatar>
+                <Avatar style={{background: item.iconBg, color: item.iconColor}}>
                 {item.icon}
                 </Avatar>
               <p>
