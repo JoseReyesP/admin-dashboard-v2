@@ -25,12 +25,32 @@ export const options = {
   plugins: {
     legend: {
       position: 'top',
+      labels: {
+        color: '#141414',
+      },
     },
     title: {
       display: true,
       text: 'Monthly Sales',
+      color: 'white',
+      font: {
+        size: 16,
+        weight: 'normal',
+      },
     },
   },
+  scales: {
+    x: {
+      ticks: {
+        color: '#141414',
+      }
+    },
+    y: {
+      ticks: {
+        color: '#3d3d3d',
+      }
+    }
+  }
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -41,17 +61,17 @@ export const data = {
     {
       label: '2022',
       data: labels.map(() => faker.datatype.boolean({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      backgroundColor: 'rgba(37, 54, 98, 0.7)',
     },
     {
       label: '2023',
       data: labels.map(() => faker.datatype.boolean({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      backgroundColor: 'rgba(28, 69, 93, 0.7)',
     },
     {
       label: '2024',
       data: labels.map(() => faker.datatype.boolean({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(153, 102, 255, 0.5)',
+      backgroundColor: 'rgba(250, 137, 107, 0.7)',
     },
   ],
 };

@@ -64,20 +64,20 @@ export const data = {
     {
       label: 'Ropa de mujer',
       data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(241, 59, 78)',
-      backgroundColor: 'rgba(241, 59, 78, 0.5)',
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },
     {
       label: 'Ropa de hombre',
       data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(59, 103, 241)',
-      backgroundColor: 'rgba(59, 103, 241, 0.5)',
+      borderColor: 'rgb(19, 189, 158)',
+      backgroundColor: 'rgba(19, 189, 158, 0.5)',
     },
     {
         label: 'Joyeria',
         data: labels.map(() => faker.datatype.boolean({ min: -1000, max: 1000 })),
-        borderColor: 'rgb(255, 209, 102)',
-        backgroundColor: 'rgba(255, 209, 102, 0.5)',
+        borderColor: 'rgb(93, 135, 255)',
+        backgroundColor: 'rgba(93, 135, 255, 0.5)',
       },
   ],
 };
