@@ -1,11 +1,10 @@
-import { Box, Container, Grid, Stack } from "@mui/material";
-import FormNewProduct from "components/FormNewProduct";
-import Header from "components/Header";
 import React from "react";
+import { Box, Container, Grid, Stack } from "@mui/material";
+import FormNewUser from "components/FormNewUser";
+import Header from "components/Header";
 
-
-const CreateNewProduct = () => {
-  return <Box
+const CreateNewUser = ()=>{
+    return <Box
       component="main"
       sx={{
         flexGrow: 1,
@@ -15,7 +14,7 @@ const CreateNewProduct = () => {
       <Container maxWidth="md">
         <Stack spacing={3}>
           <div>
-            <Header title="New Product"/>
+            <Header title="New User"/>
           </div>
           <div>
             <Grid
@@ -23,9 +22,10 @@ const CreateNewProduct = () => {
             >
               <Grid
                 xs={10}
-                md={12}
+                md={10}
+                lg={12}
               >
-              <FormNewProduct/>
+              <FormNewUser/>
               </Grid>
             </Grid>
           </div>
@@ -34,4 +34,4 @@ const CreateNewProduct = () => {
     </Box>;
 };
 
-export default CreateNewProduct;
+export default CreateNewUser;

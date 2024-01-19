@@ -1,21 +1,37 @@
 import React from "react";
-import { Box, Button, useTheme, Rating, Switch } from "@mui/material";
+import {
+  Box,
+  Button,
+  useTheme,
+  Rating,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { useGetProductsQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import { DeleteForeverOutlined, EditOutlined } from "@mui/icons-material";
+import {
+  DeleteForeverOutlined,
+  EditOutlined,
+  AddOutlined,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import FlexBetween from "components/FlexBetween";
 
 const ProductsList = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetProductsQuery();
   const navigate = useNavigate();
-  console.log("🚀 ~ file: index.js:10 ~ Users ~ data:", data);
 
   const columns = [
     {
       field: "_id",
       headerName: "ID",
+      flex: 1,
+    },
+    {
+      field: "title",
+      headerName: "Title",
       flex: 1,
     },
     {
@@ -25,14 +41,10 @@ const ProductsList = () => {
       renderCell: (params) => params.value.name,
     },
     {
-      field: "title",
-      headerName: "Title",
-      flex: 1,
-    },
-    {
       field: "price",
       headerName: "Price",
       flex: 0.5,
+      renderCell: (params) => `$${params.value}`,
     },
     {
       field: "stock",
@@ -43,7 +55,13 @@ const ProductsList = () => {
       field: "averageRating",
       headerName: "Rating",
       flex: 1,
-      renderCell: (params) => <Rating value={params.value} readOnly />,
+      renderCell: (params) => (
+        <Rating
+          value={params.value}
+          readOnly
+          sx={{ color: theme.palette.secondary[400] }}
+        />
+      ),
     },
     {
       field: "actions",
@@ -53,35 +71,42 @@ const ProductsList = () => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditOutlined />}
-          onClick={() => navigate(`/editProducts/${params.id}`)}
+          onClick={() => {
+            navigate(`/editProducts/${params.id}`);
+          }}
           label="Edit"
         />,
         <GridActionsCellItem
           icon={<DeleteForeverOutlined />}
-          onClick={() => console.log(params.id)}
+          onClick={() => console.log("estos son los params:", params)}
           label="Delete"
         />,
         <Switch
+          checked={params.row.isDeleted}
           sx={{
-            "& .Mui-checked": {
-              color: theme.palette.primary[500],
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: theme.palette.background.alt,
+            },
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: theme.palette.background.alt,
             },
           }}
         />,
       ],
     },
-    // {
-    //   field: "phoneNumber",
-    //   headerName: "Phone Number",
-    //   flex: 0.5,
-    //   renderCell: (params) => {
-    //     return params.value.replace(/^(\d{3})(\d{3})(\d{4})/, "($1)$2-$3");
-    //   },
-    // }, this field is to show that formating is possible inside datagrid, providing a layer of personalization
   ];
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="PRODUCTS" subtitle="List of Products" />
+      <FlexBetween>
+        <Header title="PRODUCTS" subtitle="List of Products" />
+        <Button sx={{ backgroundColor: theme.palette.secondary[300] }} onClick={()=>navigate("/newProduct")}>
+          <AddOutlined sx={{ color: theme.palette.primary[600] }} />
+          <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
+            Add new Product
+          </Typography>
+        </Button>
+      </FlexBetween>
+
       <Box
         mt="40px"
         height="75vh"
@@ -115,7 +140,6 @@ const ProductsList = () => {
           getRowId={(row) => row._id}
           rows={data || []}
           columns={columns}
-          checkboxSelection
         />
       </Box>
     </Box>
