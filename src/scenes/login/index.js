@@ -17,6 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { useLoginMutation } from "state/api";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -36,6 +37,7 @@ function Copyright() {
 
 export default function LogIn() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [login, setLogin] = useState({
     email: "",
     password: "",
@@ -76,6 +78,7 @@ export default function LogIn() {
       const response = await loginRequest(login);
       console.log("🚀 ~ handleSubmit ~ response:", response);
       setCookie("t", response.data.token, 7);
+      navigate("/dashboard");
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
     }

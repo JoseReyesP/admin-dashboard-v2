@@ -26,14 +26,9 @@ const ProductsList = () => {
   const [disableProduct, { isLoading: isUpdating }] =
     useDisableProductMutation();
 
-  useEffect(() => {
-    console.log("isDisabling", isUpdating);
-  }, [isUpdating]);
-
   const handleSwitchChange =
     ({ id, isDeleted }) =>
     (event) => {
-      console.log("disable productd,", id, isDeleted);
       disableProduct({
         id: id,
         isDeleted: isDeleted,
