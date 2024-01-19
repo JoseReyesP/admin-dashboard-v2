@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -6,8 +6,9 @@ import {
   Rating,
   Switch,
   Typography,
+  CircularProgress,
 } from "@mui/material";
-import { useGetProductsQuery } from "state/api";
+import { useGetProductsQuery, useDisableProductMutation } from "state/api";
 import Header from "components/Header";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {
@@ -22,6 +23,22 @@ const ProductsList = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetProductsQuery();
   const navigate = useNavigate();
+  const [disableProduct, { isLoading: isUpdating }] =
+    useDisableProductMutation();
+
+  useEffect(() => {
+    console.log("isDisabling", isUpdating);
+  }, [isUpdating]);
+
+  const handleSwitchChange =
+    ({ id, isDeleted }) =>
+    (event) => {
+      console.log("disable productd,", id, isDeleted);
+      disableProduct({
+        id: id,
+        isDeleted: isDeleted,
+      });
+    };
 
   const columns = [
     {
@@ -81,17 +98,25 @@ const ProductsList = () => {
           onClick={() => console.log("estos son los params:", params)}
           label="Delete"
         />,
-        <Switch
-          checked={params.row.isDeleted}
-          sx={{
-            "& .MuiSwitch-switchBase.Mui-checked": {
-              color: theme.palette.background.alt,
-            },
-            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-              backgroundColor: theme.palette.background.alt,
-            },
-          }}
-        />,
+        isUpdating ? (
+          <CircularProgress />
+        ) : (
+          <Switch
+            checked={params.row.isDeleted}
+            onChange={handleSwitchChange({
+              id: params.row.id,
+              isDeleted: !params.row.isDeleted,
+            })}
+            sx={{
+              "& .MuiSwitch-switchBase.Mui-checked": {
+                color: theme.palette.background.alt,
+              },
+              "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                backgroundColor: theme.palette.background.alt,
+              },
+            }}
+          />
+        ),
       ],
     },
   ];
@@ -99,7 +124,10 @@ const ProductsList = () => {
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header title="PRODUCTS" subtitle="List of Products" />
-        <Button sx={{ backgroundColor: theme.palette.secondary[300] }} onClick={()=>navigate("/newProduct")}>
+        <Button
+          sx={{ backgroundColor: theme.palette.secondary[300] }}
+          onClick={() => navigate("/newProduct")}
+        >
           <AddOutlined sx={{ color: theme.palette.primary[600] }} />
           <Typography m="0.2rem" sx={{ color: theme.palette.primary[600] }}>
             Add new Product
