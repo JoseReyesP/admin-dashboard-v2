@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useMemo } from "react";
+import { Component, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { themeSettings } from "theme";
@@ -18,6 +18,24 @@ function App() {
   document.title = "Henrucci Admin";
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
+  const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
+    <Route
+      {...rest}
+      render={() =>
+        isAuthenticated ? <Component /> : <Navigate to="/" replace />
+      }
+    />
+  );
+
+  // Usage
+  {
+    /* <PrivateRoute
+  path="/dashboard"
+  component={Dashboard}
+  isAuthenticated={/* your authentication logic */
+  }
+  // /> */}
   return (
     <div className="app">
       <BrowserRouter>
@@ -25,7 +43,7 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/products" element={<ProductsList />} />
               <Route path="/users" element={<Users />} />

@@ -1,81 +1,115 @@
 import { LockOutlined } from "@mui/icons-material";
-import { 
-    Avatar,
-    Box,
-    Button,
-    Container,
-    CssBaseline,
-    FormControlLabel,
-    Grid,
-    Link,
-    Paper,
-    TextField,
-    Typography,
-    useTheme
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
+import { useLoginMutation } from "state/api";
 
 import { useState } from "react";
-    
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://pf-henry-15a-ecommerce-frontend.vercel.app/">
+      {"Copyright © "}
+      <Link
+        color="inherit"
+        href="https://pf-henry-15a-ecommerce-frontend.vercel.app/"
+      >
         Henrucci
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
 export default function LogIn() {
-    const theme = useTheme()
-    const [login, setLogin] = useState({
-        email: '',
-        password: ''
-    });
-    const [errors, setErrors] = useState({
-        email: '',
-        password: ''
-    });
+  const theme = useTheme();
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+  const [loginRequest] = useLoginMutation();
 
-    const handleChange = (e)=>{
-        e.preventDefault();
-        setLogin({...login, [e.target.name]:e.target.value}, setErrors(validate(login)));
-    };
+  const handleChange = (e) => {
+    e.preventDefault();
+    setLogin(
+      { ...login, [e.target.name]: e.target.value },
+      setErrors(validate(login))
+    );
+  };
 
-    const validate = (data) =>{
-        let errors = {}
-        const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-        if(!regexEmail.test(data.email)) errors.email = "invalid email";
-        else delete errors.email;
-        if (data.password.length < 8) errors.password = "must contain at least 8 characters";
-        else delete errors.password;
-        return errors;
-    };
+  const validate = (data) => {
+    let errors = {};
+    const regexEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    if (!regexEmail.test(data.email)) errors.email = "invalid email";
+    else delete errors.email;
+    if (data.password.length < 8)
+      errors.password = "must contain at least 8 characters";
+    else delete errors.password;
+    return errors;
+  };
 
-    const handleSubmit = (e) =>{
-        e.preventDefault();
-
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=None; Secure`;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await loginRequest(login);
+      console.log("🚀 ~ handleSubmit ~ response:", response);
+      setCookie("t", response.data.token, 7);
+    } catch (error) {
+      console.log("🚀 ~ handleSubmit ~ error:", error);
     }
+  };
   return (
-    <Container 
-    component="main"
-    maxWidth="xs"
-    sx={{display:'flex', flexDirection:'column', height: '100vh', justifyContent:'center'}}
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        justifyContent: "center",
+      }}
     >
       <CssBaseline />
-      <Paper elevation={12} sx={{p:5, bgcolor: theme.palette.background.default}} >
-        <Box sx={{display:'flex', flexDirection:'column', flexGrow: 1, alignItems: 'center' }}>    
-        <Avatar>
-          <LockOutlined />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Henrucci
-        </Typography>
+      <Paper
+        elevation={12}
+        sx={{ p: 5, bgcolor: theme.palette.background.default }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            alignItems: "center",
+          }}
+        >
+          <Avatar>
+            <LockOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Henrucci
+          </Typography>
         </Box>
         <form noValidate>
           <TextField
@@ -106,25 +140,36 @@ export default function LogIn() {
             onChange={handleChange}
             helperText={errors.password}
           />
-          <FormControlLabel control={<Checkbox defaultChecked color="secondary"/>} label="Remember me" sx={{color:theme.palette.secondary[400], p:1}}/> 
+          <FormControlLabel
+            control={<Checkbox defaultChecked color="secondary" />}
+            label="Remember me"
+            sx={{ color: theme.palette.secondary[400], p: 1 }}
+          />
           <Button
             fullWidth
             variant="contained"
             disabled={Object.keys(errors).length > 0 ? true : false}
-            sx={{bgcolor: theme.palette.secondary[300], color: theme.palette.primary.main}}
+            sx={{
+              bgcolor: theme.palette.secondary[300],
+              color: theme.palette.primary.main,
+            }}
             onClick={handleSubmit}
           >
             Log In
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="/forgot" variant="body2" sx={{color: theme.palette.secondary[400]}}>
+              <Link
+                href="/forgot"
+                variant="body2"
+                sx={{ color: theme.palette.secondary[400] }}
+              >
                 Forgot password?
               </Link>
             </Grid>
           </Grid>
         </form>
-      </Paper >
+      </Paper>
       <Box mt={8}>
         <Copyright />
       </Box>

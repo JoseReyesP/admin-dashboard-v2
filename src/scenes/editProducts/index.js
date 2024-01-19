@@ -63,11 +63,13 @@ const EditProducts = () => {
   // useEffects  ///////////////////////////////////////////////////////
   useEffect(() => {
     if (productData && isEditing) {
+      console.log("🚀 ~ useEffect ~ productData:", productData);
       Object.entries(productData).map(([key, value]) => {
         formDataProduct.has(key)
           ? formDataProduct.set(key, value)
           : formDataProduct.append(key, value);
       });
+      formDataProduct.set("category", productData.category._id);
       console.log("🚀 ~ Object.entries ~ formDataProduct:", formDataProduct);
     }
     console.log("🚀 ~ Object.entries ~ formDataProduct:", formDataProduct);
