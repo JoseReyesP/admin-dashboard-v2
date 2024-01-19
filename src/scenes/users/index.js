@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, useTheme, Switch, Typography } from "@mui/material";
-import { useGetUsersQuery } from "state/api";
+import { api, useGetUsersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {

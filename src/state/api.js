@@ -89,6 +89,25 @@ export const api = createApi({
       },
       invalidatesTags: ["Product", "Products"],
     }),
+    disableUser: build.mutation({
+      query: (params) => {
+        console.log("🚀 ~ params-DisableUser:", params);
+        const body = {
+          isDeleted: params.isDeleted,
+        };
+        const token = getAuthTokenFromCookies();
+        const config = {
+          url: `/api/users/${params.id}`,
+          method: "PUT",
+          body: body,
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        console.log("🚀 ~ config:", config);
+
+        return config;
+      },
+      invalidatesTags: ["User", "Users"],
+    }),
     updateReview: build.mutation({
       query: (params) => {
         const token = getAuthTokenFromCookies();
@@ -195,4 +214,5 @@ export const {
   useUpdateUserMutation,
   useLoginMutation,
   useDisableProductMutation,
+  useDisableUserMutation,
 } = api;

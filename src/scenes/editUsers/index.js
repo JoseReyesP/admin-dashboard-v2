@@ -34,7 +34,7 @@ import FlexBetween from "components/FlexBetween";
 import UserProfilePicture from "components/userProfilePicture";
 import UserFieldEdit from "components/userFieldEdit";
 import UserInfoDisplay from "components/userInfoDisplay";
-import defaultprofile from "assets/profileImage.png"
+import defaultprofile from "assets/profileImage.png";
 
 const formDataUser = new FormData();
 const formDataPhoto = new FormData();
@@ -60,13 +60,15 @@ const EditUsers = () => {
   // useEffects  ///////////////////////////////////////////////////////
   useEffect(() => {
     if (userData) {
+      console.log("🚀 ~ useEffect ~ userData:", userData);
       Object.entries(userData).map(([key, value]) => {
         formDataUser.has(key)
           ? formDataUser.set(key, value)
           : formDataUser.append(key, value);
       });
       //console.log('user image',userData.image);
-      if (userData.image == 'no profile picture') setCurrentProfileImage(defaultprofile);
+      if (userData.image == "no profile picture")
+        setCurrentProfileImage(defaultprofile);
       else setCurrentProfileImage(userData.image);
     }
     console.log("🚀 ~ formDataUser:", formDataUser);
@@ -86,6 +88,7 @@ const EditUsers = () => {
   }, [selectedFile]);
 
   // Handle functions  //////////////////////////////////////////////////////
+
   const handleSaveChanges = async () => {
     setUpdating(true);
     if (selectedFile) {
